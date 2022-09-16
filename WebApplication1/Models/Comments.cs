@@ -1,5 +1,6 @@
-﻿using MessagePack;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 namespace WebApplication1.Models
 {
     public class Comments
@@ -11,8 +12,7 @@ namespace WebApplication1.Models
         public int GamesID { get; set; }
 
         [Required]
-
-       public string Comment { get; set; }
+        public string Comment { get; set; }
 
     }
 }
