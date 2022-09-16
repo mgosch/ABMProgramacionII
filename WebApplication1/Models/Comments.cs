@@ -1,10 +1,18 @@
-﻿namespace WebApplication1.Models
+﻿using MessagePack;
+using System.ComponentModel.DataAnnotations.Schema;
+namespace WebApplication1.Models
 {
     public class Comments
     {
+        [Key]
         public int Id { get; set; }
-        public int GamesId { get; set; }
-        public string Comment { get; set; }
+
+        [ForeignKey("Games")]
+        public int GamesID { get; set; }
+
+        [Required]
+
+       public string Comment { get; set; }
 
     }
 }

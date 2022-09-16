@@ -1,8 +1,20 @@
-﻿namespace WebApplication1.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace WebApplication1.Models
+
 {
     public class Genres
-    {
-        public int Id { get; set; }
-        public string Description { get; set; }
+{
+    [Key]    
+    public int Id { get; set; }
+
+
+    [ForeignKey("Games")]
+    public int GamesID { get; set; }
+
+    [Required]
+
+    public string Description { get; set; }
     }
 }

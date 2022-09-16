@@ -1,8 +1,20 @@
-﻿namespace WebApplication1.Models
+﻿using MessagePack;
+using Microsoft.Build.Framework;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+
+namespace WebApplication1.Models
 {
     public class Games
     {
+        [Key]
         public int Id { get; set; }
+
+        [ForeignKey("Games")]
+        public int GamesID { get; set; }
+
+        [Required]
         public string Name { get; set; }
         public string Description { get; set; }
         public string State { get; set; }
