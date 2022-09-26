@@ -6,12 +6,12 @@ namespace WebApplication1.Models
     public class GamesGenres
     {
         [Key]
-        public int Id { get; set; }
+        public int idGameGenre { get; set; }
 
         [ForeignKey("Games")]
-        public int GamesID { get; set; }
+        public int idGame { get; set; }
 
         [ForeignKey("Genres")]
-        public int GenresId { get; set; }
+        public int idGenre { get; set; }
     }
 }

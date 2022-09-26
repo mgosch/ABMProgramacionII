@@ -7,10 +7,7 @@ namespace WebApplication1.Models
     public class Games
     {
         [Key]
-        public int Id { get; set; }
-
-        [ForeignKey("Games")]
-        public int GamesID { get; set; }
+        public int IdGame { get; set; }
 
         [Required]
         public string Name { get; set; }

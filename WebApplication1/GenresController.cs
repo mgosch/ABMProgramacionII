@@ -22,9 +22,7 @@ namespace WebApplication1
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-              return _context.Genres != null ? 
-                          View(await _context.Genres.ToListAsync()) :
-                          Problem("Entity set 'WebApplication1Context.Genres'  is null.");
+              return View(await _context.Genres.ToListAsync());
         }
 
         // GET: Genres/Details/5
@@ -36,7 +34,7 @@ namespace WebApplication1
             }
 
             var genres = await _context.Genres
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.IdGenre == id);
             if (genres == null)
             {
                 return NotFound();
@@ -56,7 +54,7 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description")] Genres genres)
+        public async Task<IActionResult> Create([Bind("IdGenre,Description")] Genres genres)
         {
             if (ModelState.IsValid)
             {
@@ -88,9 +86,9 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description")] Genres genres)
+        public async Task<IActionResult> Edit(int id, [Bind("IdGenre,Description")] Genres genres)
         {
-            if (id != genres.Id)
+            if (id != genres.IdGenre)
             {
                 return NotFound();
             }
@@ -104,7 +102,7 @@ namespace WebApplication1
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GenresExists(genres.Id))
+                    if (!GenresExists(genres.IdGenre))
                     {
                         return NotFound();
                     }
@@ -127,7 +125,7 @@ namespace WebApplication1
             }
 
             var genres = await _context.Genres
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.IdGenre == id);
             if (genres == null)
             {
                 return NotFound();
@@ -157,7 +155,7 @@ namespace WebApplication1
 
         private bool GenresExists(int id)
         {
-          return (_context.Genres?.Any(e => e.Id == id)).GetValueOrDefault();
+          return _context.Genres.Any(e => e.IdGenre == id);
         }
     }
 }

@@ -22,9 +22,7 @@ namespace WebApplication1
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-              return _context.Comments != null ? 
-                          View(await _context.Comments.ToListAsync()) :
-                          Problem("Entity set 'WebApplication1Context.Comments'  is null.");
+              return View(await _context.Comments.ToListAsync());
         }
 
         // GET: Comments/Details/5
@@ -36,7 +34,7 @@ namespace WebApplication1
             }
 
             var comments = await _context.Comments
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.IdComment == id);
             if (comments == null)
             {
                 return NotFound();
@@ -56,7 +54,7 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GamesId,Comment")] Comments comments)
+        public async Task<IActionResult> Create([Bind("IdComment,IdGame,Comment")] Comments comments)
         {
             if (ModelState.IsValid)
             {
@@ -88,9 +86,9 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GamesId,Comment")] Comments comments)
+        public async Task<IActionResult> Edit(int id, [Bind("IdComment,IdGame,Comment")] Comments comments)
         {
-            if (id != comments.Id)
+            if (id != comments.IdComment)
             {
                 return NotFound();
             }
@@ -104,7 +102,7 @@ namespace WebApplication1
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CommentsExists(comments.Id))
+                    if (!CommentsExists(comments.IdComment))
                     {
                         return NotFound();
                     }
@@ -127,7 +125,7 @@ namespace WebApplication1
             }
 
             var comments = await _context.Comments
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.IdComment == id);
             if (comments == null)
             {
                 return NotFound();
@@ -157,7 +155,7 @@ namespace WebApplication1
 
         private bool CommentsExists(int id)
         {
-          return (_context.Comments?.Any(e => e.Id == id)).GetValueOrDefault();
+          return _context.Comments.Any(e => e.IdComment == id);
         }
     }
 }

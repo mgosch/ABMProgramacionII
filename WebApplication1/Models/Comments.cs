@@ -6,10 +6,10 @@ namespace WebApplication1.Models
     public class Comments
     {
         [Key]
-        public int Id { get; set; }
+        public int IdComment { get; set; }
 
         [ForeignKey("Games")]
-        public int GamesID { get; set; }
+        public int IdGame { get; set; }
 
         [Required]
         public string Comment { get; set; }

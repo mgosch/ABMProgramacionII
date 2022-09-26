@@ -22,9 +22,7 @@ namespace WebApplication1
         // GET: Games
         public async Task<IActionResult> Index()
         {
-              return _context.Games != null ? 
-                          View(await _context.Games.ToListAsync()) :
-                          Problem("Entity set 'WebApplication1Context.Games'  is null.");
+              return View(await _context.Games.ToListAsync());
         }
 
         // GET: Games/Details/5
@@ -36,7 +34,7 @@ namespace WebApplication1
             }
 
             var games = await _context.Games
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.IdGame == id);
             if (games == null)
             {
                 return NotFound();
@@ -56,7 +54,7 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games)
+        public async Task<IActionResult> Create([Bind("IdGame,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games)
         {
             if (ModelState.IsValid)
             {
@@ -88,9 +86,9 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games)
+        public async Task<IActionResult> Edit(int id, [Bind("IdGame,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games)
         {
-            if (id != games.Id)
+            if (id != games.IdGame)
             {
                 return NotFound();
             }
@@ -104,7 +102,7 @@ namespace WebApplication1
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GamesExists(games.Id))
+                    if (!GamesExists(games.IdGame))
                     {
                         return NotFound();
                     }
@@ -127,7 +125,7 @@ namespace WebApplication1
             }
 
             var games = await _context.Games
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.IdGame == id);
             if (games == null)
             {
                 return NotFound();
@@ -157,7 +155,7 @@ namespace WebApplication1
 
         private bool GamesExists(int id)
         {
-          return (_context.Games?.Any(e => e.Id == id)).GetValueOrDefault();
+          return _context.Games.Any(e => e.IdGame == id);
         }
     }
 }
