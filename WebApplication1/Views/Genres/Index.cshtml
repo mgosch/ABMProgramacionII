@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<WebApplication1.Models.Genres>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Géneros";
 }
 
-<h1>Index</h1>
+<h1>Géneros</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Crear nuevo</a>
 </p>
 <table class="table">
     <thead>
@@ -25,9 +25,8 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdGenre">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdGenre">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdGenre">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.IdGenre">Editar</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdGenre">Eliminar</a>
             </td>
         </tr>
 }
