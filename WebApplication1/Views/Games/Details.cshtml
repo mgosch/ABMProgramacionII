@@ -1,13 +1,13 @@
 ﻿@model WebApplication1.Models.Games
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle";
 }
 
-<h1>Details</h1>
+<h1>Detalle</h1>
 
 <div>
-    <h4>Games</h4>
+    <h4>Juego</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -21,12 +21,6 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.State)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.State)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Amount)
@@ -53,8 +47,33 @@
             @Html.DisplayFor(model => model.Image)
         </dd>
     </dl>
+
+    @if (Model.Comments != null)
+    {
+        <h3>Comentarios sobre el juego</h3>
+        <table class="table">
+            <tr>
+                <th>Comentario</th>
+            </tr>
+
+            @foreach (var item in Model.Comments)
+            {
+                string selectedRow = "";
+                if (item.IdComment == (int?)ViewData["IdComment"])
+                {
+                    selectedRow = "success";
+                }
+                <tr class="@selectedRow">
+                    <td>
+                        @item.Comment
+                    </td>
+                </tr>
+            }
+
+        </table>
+    }
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdGame">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.IdGame">Editar</a> |
+    <a asp-action="Index">Volver al listado</a>
 </div>

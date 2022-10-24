@@ -12,6 +12,8 @@ namespace WebApplication1.Models
         public int IdGame { get; set; }
 
         [Required]
+        [Column("Comment")]
+        [Display(Name = "comentario")]
         public string Comment { get; set; }
 
     }

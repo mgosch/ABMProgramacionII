@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
+using WebApplication1.Models.CoolerViewModels;
 using WebApplication1.Models;
 
 namespace WebApplication1
@@ -20,9 +21,25 @@ namespace WebApplication1
         }
 
         // GET: Games
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-              return View(await _context.Games.ToListAsync());
+            var viewModel = new GamesIndexData();
+            viewModel.Games = await _context.Games
+                  .Include(i => i.GamesGenres)
+                    .ThenInclude(i => i.Genres)
+                  .AsNoTracking()
+                  .OrderBy(i => i.IdGame)
+                  .ToListAsync();
+
+            if (id != null)
+            {
+                ViewData["idGame"] = id.Value;
+                Games games = viewModel.Games.Where(
+                    i => i.IdGame == id.Value).Single();
+                viewModel.Genres = games.GamesGenres.Select(s => s.Genres);
+            }
+
+            return View(viewModel);
         }
 
         // GET: Games/Details/5
@@ -46,6 +63,9 @@ namespace WebApplication1
         // GET: Games/Create
         public IActionResult Create()
         {
+            var game = new Games();
+            game.GamesGenres = new List<GamesGenres>();
+            PopulateAssignedGenresData(game);
             return View();
         }
 
@@ -54,15 +74,30 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdGame,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games)
+        public async Task<IActionResult> Create([Bind("Name,Description,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games game, string[] selectedGenres)
         {
+
+            if (selectedGenres != null)
+            {
+                game.GamesGenres = new List<GamesGenres>();
+                foreach (var genres in selectedGenres)
+                {
+                    var genreToAdd = new GamesGenres { idGame = game.IdGame, idGenre = int.Parse(genres) };
+                    game.GamesGenres.Add(genreToAdd);
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                _context.Add(games);
+                game.State = "HAB";
+                _context.Add(game);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(games);
+
+            PopulateAssignedGenresData(game);
+
+            return View(game);
         }
 
         // GET: Games/Edit/5
@@ -73,12 +108,19 @@ namespace WebApplication1
                 return NotFound();
             }
 
-            var games = await _context.Games.FindAsync(id);
-            if (games == null)
+            var game = await _context.Games
+                .Include(i => i.GamesGenres).ThenInclude(i => i.Genres)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.IdGame == id);
+
+            if (game == null)
             {
                 return NotFound();
             }
-            return View(games);
+
+            PopulateAssignedGenresData(game);
+
+            return View(game);
         }
 
         // POST: Games/Edit/5
@@ -156,6 +198,23 @@ namespace WebApplication1
         private bool GamesExists(int id)
         {
           return _context.Games.Any(e => e.IdGame == id);
+        }
+
+        private void PopulateAssignedGenresData(Games game)
+        {
+            var allGenres = _context.Genres;
+            var gameGenres = new HashSet<int>(game.GamesGenres.Select(c => c.idGenre));
+            var viewModel = new List<AssignedGenreData>();
+            foreach (var genre in allGenres)
+            {
+                viewModel.Add(new AssignedGenreData
+                {
+                    IdGenre = genre.IdGenre,
+                    Title = genre.Description,
+                    Assigned = gameGenres.Contains(genre.IdGenre)
+                });
+            }
+            ViewData["Genres"] = viewModel;
         }
     }
 }

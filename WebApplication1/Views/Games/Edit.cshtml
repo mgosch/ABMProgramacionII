@@ -1,12 +1,12 @@
 ﻿@model WebApplication1.Models.Games
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
 }
 
-<h1>Edit</h1>
+<h1>Editar</h1>
 
-<h4>Games</h4>
+<h4>Juego</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,11 +22,6 @@
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="State" class="control-label"></label>
-                <input asp-for="State" class="form-control" />
-                <span asp-validation-for="State" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
@@ -49,14 +44,43 @@
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <div class="col-md-offset-2 col-md-10">
+                    <table class="justify-content-xl-between">
+                        <tr>
+                            <td>Categorias</td>
+                            @{
+                                int cnt = 0;
+                                List<WebApplication1.Models.CoolerViewModels.AssignedGenreData> genres = ViewBag.Genres;
+
+                                foreach (var genre in genres)
+                                {
+                                    if (cnt++ % 1 == 0)
+                                    {
+                                    @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <input type="checkbox"
+                                               name="selectedGenres"
+                                               value="@genre.IdGenre"
+                                               class="form-check-input"
+                                               @(Html.Raw(genre.Assigned ? "checked=\"checked\"" : "")) />
+                                        @genre.Title
+                                    @:</td>
+                                }
+                            @:</tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Volver al listado</a>
 </div>
 
 @section Scripts {

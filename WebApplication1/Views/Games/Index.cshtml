@@ -1,52 +1,51 @@
-﻿@model IEnumerable<WebApplication1.Models.Games>
+﻿@model WebApplication1.Models.CoolerViewModels.GamesIndexData
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Juegos</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Crear nuevo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Nombre
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Descripcion
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State)
+                Importe
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Amount)
+                Porcentaje Alquiler
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Percent_Rent)
+                Cooler Coins
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Reward_Cooler_Coins)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
+                Categorias
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+    @foreach (var item in Model.Games) {
+        string selectedRow = "";
+            if (item.IdGame == (int?)ViewData["idGame"])
+        {
+            selectedRow = "table-success";
+        }
+        <tr class="@selectedRow">
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
@@ -58,12 +57,15 @@
                 @Html.DisplayFor(modelItem => item.Reward_Cooler_Coins)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Image)
+                @foreach (var genres in item.GamesGenres)
+                {
+                    @genres.Genres.Description <br />
+                }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdGame">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdGame">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdGame">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.IdGame">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.IdGame">Detalle</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdGame">Eliminar</a>
             </td>
         </tr>
 }

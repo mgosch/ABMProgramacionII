@@ -13,5 +13,9 @@ namespace WebApplication1.Models
 
         [ForeignKey("Genres")]
         public int idGenre { get; set; }
+
+        public Games Games { get; set; }
+
+        public Genres Genres { get; set; }
     }
 }

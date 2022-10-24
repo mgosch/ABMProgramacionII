@@ -10,6 +10,10 @@ namespace WebApplication1.Models
         public int IdGenre { get; set; }
 
         [Required]
+        [Column("Description")]
+        [Display(Name = "Descripción")]
         public string Description { get; set; }
+
+        public ICollection<GamesGenres> GamesGenres { get; set; }
     }
 }
