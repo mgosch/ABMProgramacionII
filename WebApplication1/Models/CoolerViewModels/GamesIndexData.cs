@@ -9,6 +9,5 @@ namespace WebApplication1.Models.CoolerViewModels
     {
         public IEnumerable<Games> Games { get; set; }
         public IEnumerable<Genres> Genres { get; set; }
-        public IEnumerable<Comments> Comments { get; set; }
     }
 }

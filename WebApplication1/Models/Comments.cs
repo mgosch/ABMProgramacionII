@@ -13,8 +13,10 @@ namespace WebApplication1.Models
 
         [Required]
         [Column("Comment")]
-        [Display(Name = "comentario")]
+        [Display(Name = "Comentario")]
         public string Comment { get; set; }
+
+        public Games Games { get; set; }
 
     }
 }

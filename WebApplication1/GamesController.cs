@@ -51,7 +51,10 @@ namespace WebApplication1
             }
 
             var games = await _context.Games
-                .FirstOrDefaultAsync(m => m.IdGame == id);
+                        .Include(i => i.Comments)
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(m => m.IdGame == id);
+
             if (games == null)
             {
                 return NotFound();
@@ -193,6 +196,35 @@ namespace WebApplication1
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Games/CreateComment/5
+        public async Task<IActionResult> CreateComment(int? id)
+        {
+            if (id == null || _context.Games == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["idGame"] = id.Value;
+
+            return View();
+        }
+
+        // POST: Games/CreateComment
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IdGame,Comment")] Comments comments)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(comments);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(comments);
         }
 
         private bool GamesExists(int id)

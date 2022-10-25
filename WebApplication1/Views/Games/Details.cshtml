@@ -55,6 +55,9 @@
             <tr>
                 <th>Comentario</th>
             </tr>
+            <div>
+                <a asp-action="CreateComment" asp-route-id="@Model?.IdGame">AgregarComentario</a>
+            </div>
 
             @foreach (var item in Model.Comments)
             {
