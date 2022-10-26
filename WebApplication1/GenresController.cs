@@ -26,6 +26,8 @@ namespace WebApplication1
         }
 
         // GET: Genres/Details/5
+        //Recibe por parametro id del tipo int.
+        //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Genres == null)
@@ -52,6 +54,9 @@ namespace WebApplication1
         // POST: Genres/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Recibe por parametros IdGenre, Description y un objeto genres del tipo Genres.
+        //Devuelve creacion de genero.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdGenre,Description")] Genres genres)
@@ -66,6 +71,8 @@ namespace WebApplication1
         }
 
         // GET: Genres/Edit/5
+        //Recibe por parametro id del tipo int.
+        //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Genres == null)
@@ -84,6 +91,8 @@ namespace WebApplication1
         // POST: Genres/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Recibe por parametros IdGenre, Description y un objeto genres del tipo Genres.
+        //Devuelve update de genero.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdGenre,Description")] Genres genres)
@@ -117,6 +126,8 @@ namespace WebApplication1
         }
 
         // GET: Genres/Delete/5
+        //Recibe por parametro id del tipo int.
+        //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Genres == null)
@@ -135,6 +146,10 @@ namespace WebApplication1
         }
 
         // POST: Genres/Delete/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Recibe por parametro id del tipo int.
+        //Devuelve delete de genero. Si el genero no existe devuelve mensaje.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -153,6 +168,7 @@ namespace WebApplication1
             return RedirectToAction(nameof(Index));
         }
 
+        //Recibe por parametro id del tipo int.
         private bool GenresExists(int id)
         {
           return _context.Genres.Any(e => e.IdGenre == id);

@@ -21,6 +21,8 @@ namespace WebApplication1
         }
 
         // GET: Games
+        // Recibe por parametro id del tipo int.
+        // Devuelve el juego y sus generos.
         public async Task<IActionResult> Index(int? id)
         {
             var viewModel = new GamesIndexData();
@@ -43,6 +45,8 @@ namespace WebApplication1
         }
 
         // GET: Games/Details/5
+        //Recibe por parametro id del tipo int.
+        //Devuelve el juego y sus comentarios en caso de tenerlos. Si el juego no existe devuelve mensaje.
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Games == null)
@@ -64,6 +68,7 @@ namespace WebApplication1
         }
 
         // GET: Games/Create
+        //Devuelve lista de generos.
         public IActionResult Create()
         {
             var game = new Games();
@@ -75,6 +80,8 @@ namespace WebApplication1
         // POST: Games/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Recibe por parametros Name, Description, Amount, Percent_Rent, Reward_Cooler_Coins, Image, un objeto game del tipo Game y una cadena string
+        //Devuelve por cada genero que tenga el juego crea un registro en la tabla GamesGenres y retorna la vista del juego.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Description,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games game, string[] selectedGenres)
@@ -104,6 +111,8 @@ namespace WebApplication1
         }
 
         // GET: Games/Edit/5
+        //Recibe por parametro id del tipo int.
+        //Devuelve juego. Si el juego no existe devuelve mensaje.
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Games == null)
@@ -129,6 +138,9 @@ namespace WebApplication1
         // POST: Games/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Recibe por parametros Name, Description, Amount, Percent_Rent, Reward_Cooler_Coins, Image y un objeto game del tipo Game.
+        //Devuelve un update de la info del juego. Si el juego no existe devuelve mensaje.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdGame,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games)
@@ -162,6 +174,8 @@ namespace WebApplication1
         }
 
         // GET: Games/Delete/5
+        //Recibe por parametro id del tipo int.
+        //Devuelve juego. Si el juego no existe devuelve mensaje.
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Games == null)
@@ -180,6 +194,10 @@ namespace WebApplication1
         }
 
         // POST: Games/Delete/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Recibe por parametro id del tipo int.
+        //Devuelve borrado del juego. Si el juego no existe devuelve mensaje.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -199,6 +217,9 @@ namespace WebApplication1
         }
 
         // GET: Games/CreateComment/5
+        //Recibe por parametro id del tipo int.
+        //Devuelve juego. Si el juego no existe devuelve mensaje.
+        
         public async Task<IActionResult> CreateComment(int? id)
         {
             if (id == null || _context.Games == null)
@@ -214,6 +235,8 @@ namespace WebApplication1
         // POST: Games/CreateComment
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //Recibe por parametros IdGame, Comment y un objeto comments del tipo Comments.
+        //Devuelve Agrega comentario al juego.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdGame,Comment")] Comments comments)
@@ -232,6 +255,8 @@ namespace WebApplication1
           return _context.Games.Any(e => e.IdGame == id);
         }
 
+        //Recibe por parametro un objeto del tipo Game
+        //Devuelve asigna un genero o listado de generos al juego.
         private void PopulateAssignedGenresData(Games game)
         {
             var allGenres = _context.Genres;
