@@ -6,7 +6,8 @@ namespace WebApplication1.Models
 {
     public class Genres
     {
-        [Key]    
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdGenre { get; set; }
 
         [Required]

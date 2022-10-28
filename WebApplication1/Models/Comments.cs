@@ -6,6 +6,7 @@ namespace WebApplication1.Models
     public class Comments
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdComment { get; set; }
 
         [ForeignKey("Games")]

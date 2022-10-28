@@ -61,6 +61,7 @@ namespace WebApplication1
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdGenre,Description")] Genres genres)
         {
+            ModelState.Remove("GamesGenres");
             if (ModelState.IsValid)
             {
                 _context.Add(genres);
@@ -102,6 +103,7 @@ namespace WebApplication1
                 return NotFound();
             }
 
+            ModelState.Remove("GamesGenres");
             if (ModelState.IsValid)
             {
                 try

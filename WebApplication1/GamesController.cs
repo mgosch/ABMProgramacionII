@@ -67,9 +67,9 @@ namespace WebApplication1
             return View(games);
         }
 
-        // GET: Games/Create
+        // GET: Games/CreateGame
         //Devuelve lista de generos.
-        public IActionResult Create()
+        public IActionResult CreateGame()
         {
             var game = new Games();
             game.GamesGenres = new List<GamesGenres>();
@@ -77,14 +77,14 @@ namespace WebApplication1
             return View();
         }
 
-        // POST: Games/Create
+        // POST: Games/CreateGame
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //Recibe por parametros Name, Description, Amount, Percent_Rent, Reward_Cooler_Coins, Image, un objeto game del tipo Game y una cadena string
         //Devuelve por cada genero que tenga el juego crea un registro en la tabla GamesGenres y retorna la vista del juego.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games game, string[] selectedGenres)
+        public async Task<IActionResult> CreateGame([Bind("Name,Description,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games game, string[] selectedGenres)
         {
 
             if (selectedGenres != null)
@@ -97,6 +97,9 @@ namespace WebApplication1
                 }
             }
 
+            ModelState.Remove("Comments");
+            ModelState.Remove("GamesGenres");
+            ModelState.Remove("State");
             if (ModelState.IsValid)
             {
                 game.State = "HAB";
@@ -143,34 +146,46 @@ namespace WebApplication1
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdGame,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games)
+        public async Task<IActionResult> Edit(int id, [Bind("IdGame,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games, string[] selectedGenres)
         {
             if (id != games.IdGame)
             {
                 return NotFound();
             }
 
+            var gameToUpdate = await _context.Games
+                        .Include(i => i.GamesGenres)
+                        .ThenInclude(i => i.Genres)
+                .FirstOrDefaultAsync(m => m.IdGame == id);
+
+            ModelState.Remove("Comments");
+            ModelState.Remove("GamesGenres");
+            ModelState.Remove("State");
             if (ModelState.IsValid)
             {
+                gameToUpdate.State = "HAB";
+                _context.Update(gameToUpdate);
+                UpdateGamesGenres(selectedGenres, gameToUpdate);
+                
                 try
                 {
-                    _context.Update(games);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!GamesExists(games.IdGame))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
+
                 return RedirectToAction(nameof(Index));
             }
-            return View(games);
+
+            UpdateGamesGenres(selectedGenres, gameToUpdate);
+            PopulateAssignedGenresData(gameToUpdate);
+
+            return View(gameToUpdate);
         }
 
         // GET: Games/Delete/5
@@ -202,16 +217,12 @@ namespace WebApplication1
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Games == null)
-            {
-                return Problem("Entity set 'WebApplication1Context.Games'  is null.");
-            }
-            var games = await _context.Games.FindAsync(id);
-            if (games != null)
-            {
-                _context.Games.Remove(games);
-            }
-            
+            Games game = await _context.Games
+                            .Include(i => i.GamesGenres)
+                            .SingleAsync(i => i.IdGame == id);
+
+            _context.Games.Remove(game);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -239,8 +250,9 @@ namespace WebApplication1
         //Devuelve Agrega comentario al juego.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdGame,Comment")] Comments comments)
+        public async Task<IActionResult> CreateComment([Bind("IdGame,Comment")] Comments comments)
         {
+            ModelState.Remove("Games");
             if (ModelState.IsValid)
             {
                 _context.Add(comments);
@@ -272,6 +284,41 @@ namespace WebApplication1
                 });
             }
             ViewData["Genres"] = viewModel;
+        }
+
+
+        //Recibe por parametro un objeto del tipo Games y una lista de genres
+        //Realiza el update de un genero o listado de generos al juego
+        private void UpdateGamesGenres(string[] selectedGenres, Games gameToUpdate)
+        {
+            if (selectedGenres == null)
+            {
+                gameToUpdate.GamesGenres = new List<GamesGenres>();
+                return;
+            }
+
+            var selectedGenresHS = new HashSet<string>(selectedGenres);
+            var instructorCourses = new HashSet<int>
+                (gameToUpdate.GamesGenres.Select(c => c.Genres.IdGenre));
+            foreach (var genre in _context.Genres)
+            {
+                if (selectedGenresHS.Contains(genre.IdGenre.ToString()))
+                {
+                    if (!instructorCourses.Contains(genre.IdGenre))
+                    {
+                        gameToUpdate.GamesGenres.Add(new GamesGenres { idGame = gameToUpdate.IdGame, idGenre = genre.IdGenre });
+                    }
+                }
+                else
+                {
+
+                    if (instructorCourses.Contains(genre.IdGenre))
+                    {
+                        GamesGenres genreToRemove = gameToUpdate.GamesGenres.FirstOrDefault(i => i.idGame == genre.IdGenre);
+                        _context.Remove(genreToRemove);
+                    }
+                }
+            }
         }
     }
 }
