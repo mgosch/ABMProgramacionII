@@ -163,6 +163,12 @@ namespace WebApplication1
             ModelState.Remove("State");
             if (ModelState.IsValid)
             {
+                gameToUpdate.Name = games.Name;
+                gameToUpdate.Description = games.Description;
+                gameToUpdate.Amount = games.Amount;
+                gameToUpdate.Percent_Rent = games.Percent_Rent;
+                gameToUpdate.Reward_Cooler_Coins = games.Reward_Cooler_Coins;
+                gameToUpdate.Image = games.Image;
                 gameToUpdate.State = "HAB";
                 _context.Update(gameToUpdate);
                 UpdateGamesGenres(selectedGenres, gameToUpdate);
@@ -298,13 +304,13 @@ namespace WebApplication1
             }
 
             var selectedGenresHS = new HashSet<string>(selectedGenres);
-            var instructorCourses = new HashSet<int>
+            var gamesGenres = new HashSet<int>
                 (gameToUpdate.GamesGenres.Select(c => c.Genres.IdGenre));
             foreach (var genre in _context.Genres)
             {
                 if (selectedGenresHS.Contains(genre.IdGenre.ToString()))
                 {
-                    if (!instructorCourses.Contains(genre.IdGenre))
+                    if (!gamesGenres.Contains(genre.IdGenre))
                     {
                         gameToUpdate.GamesGenres.Add(new GamesGenres { idGame = gameToUpdate.IdGame, idGenre = genre.IdGenre });
                     }
@@ -312,9 +318,9 @@ namespace WebApplication1
                 else
                 {
 
-                    if (instructorCourses.Contains(genre.IdGenre))
+                    if (gamesGenres.Contains(genre.IdGenre))
                     {
-                        GamesGenres genreToRemove = gameToUpdate.GamesGenres.FirstOrDefault(i => i.idGame == genre.IdGenre);
+                        GamesGenres genreToRemove = gameToUpdate.GamesGenres.FirstOrDefault(i => i.idGenre == genre.IdGenre);
                         _context.Remove(genreToRemove);
                     }
                 }
