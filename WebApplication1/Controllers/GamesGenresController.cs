@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Models;
 
-namespace WebApplication1
+namespace WebApplication1.Controllers
 {
     public class GamesGenresController : Controller
     {
@@ -22,7 +22,7 @@ namespace WebApplication1
         // GET: GamesGenres
         public async Task<IActionResult> Index()
         {
-              return View(await _context.GamesGenres.ToListAsync());
+            return View(await _context.GamesGenres.ToListAsync());
         }
 
         // GET: GamesGenres/Details/5
@@ -148,14 +148,14 @@ namespace WebApplication1
             {
                 _context.GamesGenres.Remove(gamesGenres);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool GamesGenresExists(int id)
         {
-          return _context.GamesGenres.Any(e => e.idGameGenre == id);
+            return _context.GamesGenres.Any(e => e.idGameGenre == id);
         }
     }
 }

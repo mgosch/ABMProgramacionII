@@ -9,7 +9,7 @@ using WebApplication1.Data;
 using WebApplication1.Models.CoolerViewModels;
 using WebApplication1.Models;
 
-namespace WebApplication1
+namespace WebApplication1.Controllers
 {
     public class GamesController : Controller
     {
@@ -143,7 +143,7 @@ namespace WebApplication1
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //Recibe por parametros Name, Description, Amount, Percent_Rent, Reward_Cooler_Coins, Image y un objeto game del tipo Game.
         //Devuelve un update de la info del juego. Si el juego no existe devuelve mensaje.
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdGame,Name,Description,State,Amount,Percent_Rent,Reward_Cooler_Coins,Image")] Games games, string[] selectedGenres)
@@ -172,7 +172,7 @@ namespace WebApplication1
                 gameToUpdate.State = "HAB";
                 _context.Update(gameToUpdate);
                 UpdateGamesGenres(selectedGenres, gameToUpdate);
-                
+
                 try
                 {
                     await _context.SaveChangesAsync();
@@ -236,7 +236,7 @@ namespace WebApplication1
         // GET: Games/CreateComment/5
         //Recibe por parametro id del tipo int.
         //Devuelve juego. Si el juego no existe devuelve mensaje.
-        
+
         public async Task<IActionResult> CreateComment(int? id)
         {
             if (id == null || _context.Games == null)
@@ -270,7 +270,7 @@ namespace WebApplication1
 
         private bool GamesExists(int id)
         {
-          return _context.Games.Any(e => e.IdGame == id);
+            return _context.Games.Any(e => e.IdGame == id);
         }
 
         //Recibe por parametro un objeto del tipo Game

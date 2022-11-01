@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Models;
 
-namespace WebApplication1
+namespace WebApplication1.Controllers
 {
     public class CommentsController : Controller
     {
@@ -22,7 +22,7 @@ namespace WebApplication1
         // GET: Comments
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Comments.ToListAsync());
+            return View(await _context.Comments.ToListAsync());
         }
 
         // GET: Comments/Details/5
@@ -148,14 +148,14 @@ namespace WebApplication1
             {
                 _context.Comments.Remove(comments);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CommentsExists(int id)
         {
-          return _context.Comments.Any(e => e.IdComment == id);
+            return _context.Comments.Any(e => e.IdComment == id);
         }
     }
 }

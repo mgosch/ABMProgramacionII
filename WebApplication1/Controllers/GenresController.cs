@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.Models;
 
-namespace WebApplication1
+namespace WebApplication1.Controllers
 {
     public class GenresController : Controller
     {
@@ -22,7 +22,7 @@ namespace WebApplication1
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Genres.ToListAsync());
+            return View(await _context.Genres.ToListAsync());
         }
 
         // GET: Genres/Details/5
@@ -165,7 +165,7 @@ namespace WebApplication1
             {
                 _context.Genres.Remove(genres);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -173,7 +173,7 @@ namespace WebApplication1
         //Recibe por parametro id del tipo int.
         private bool GenresExists(int id)
         {
-          return _context.Genres.Any(e => e.IdGenre == id);
+            return _context.Genres.Any(e => e.IdGenre == id);
         }
     }
 }
