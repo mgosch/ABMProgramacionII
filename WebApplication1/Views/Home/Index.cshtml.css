@@ -1,0 +1,27 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+.img {
+    vertical-align: middle;
+    display: flex;
+}
+
+.color {
+    color: white;
+}
+
+.padding {
+    padding-top: 400px;
+}
+
+.hero {
+    float: center;
+    width: 100%;
+    position: relative;
+    padding-top: none;
+    padding-bottom: none;
+    height: 800px;
+    z-index: 1;
+    background: transparent;
+    overflow: hidden;
+}
