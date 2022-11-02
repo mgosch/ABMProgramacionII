@@ -8,6 +8,9 @@ builder.Services.AddDbContext<WebApplication1Context>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Agregamos IProvincias al scope
+builder.Services.AddScoped<IGenresRepository, EFGenresRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

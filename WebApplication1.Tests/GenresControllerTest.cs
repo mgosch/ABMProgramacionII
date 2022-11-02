@@ -1,44 +1,49 @@
 ﻿using WebApplication1.Data;
 using WebApplication1.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Models;
+using Moq;
 
 namespace WebApplication1.Tests
 {
     public class GenresControllerTest
     {
-        private readonly WebApplication1Context _context;
-        private readonly GenresController _controller;
-
-        public GenresControllerTest()
-        {
-            _controller = new GenresController(_context);
-        }
 
         [Fact]
-        public void Index()
+        public async Task IndexReturnsListGenres()
         {
-            var result = _controller.Index();
-            Assert.NotNull(result);
+            // Arrange
+            int testSessionId = 1;
+            var mockRepo = new Mock<IGenresRepository>();
+            mockRepo.Setup(repo => repo.ToListAsync())
+                .ReturnsAsync(GetTestGenres());
+            var controller = new GenresController(mockRepo.Object);
+
+            // Act
+            var result = await controller.Index();
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<List<Genres>>(
+                viewResult.ViewData.Model);
+            Assert.Equal(2, model.Count());
         }
 
-        [Fact]
-        public void Details()
+        private List<Genres> GetTestGenres()
         {
-            var result = _controller.Details(1);
-            Assert.NotNull(result);
+            var genres = new List<Genres>();
+            genres.Add(new Genres()
+            {
+                IdGenre = 1,
+                Description = "Arcade"
+            });
+            genres.Add(new Genres()
+            {
+                IdGenre = 1,
+                Description = "Acción"
+            });
+            return genres;
         }
 
-        [Fact]
-        public void Edit()
-        {
-            var result = _controller.Edit(1);
-            Assert.NotNull(result);
-        }
-
-        [Fact]
-        public void Delete()
-        {
-            var result = _controller.Delete(null);
-            Assert.NotNull(result);
-        }
     }
 }

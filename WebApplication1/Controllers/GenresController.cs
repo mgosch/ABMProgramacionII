@@ -12,17 +12,17 @@ namespace WebApplication1.Controllers
 {
     public class GenresController : Controller
     {
-        private readonly WebApplication1Context _context;
+        private readonly IGenresRepository _genresRepository;
 
-        public GenresController(WebApplication1Context context)
+        public GenresController(IGenresRepository genresRepository)
         {
-            _context = context;
+            _genresRepository = genresRepository;
         }
 
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genres.ToListAsync());
+            return View(await _genresRepository.ToListAsync());
         }
 
         // GET: Genres/Details/5
@@ -30,13 +30,13 @@ namespace WebApplication1.Controllers
         //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Genres == null)
+            if (id == null || _genresRepository.GetGenres() == null)
             {
                 return NotFound();
             }
 
-            var genres = await _context.Genres
-                .FirstOrDefaultAsync(m => m.IdGenre == id);
+            var genres = await _genresRepository.GetByIdAsync(id);
+
             if (genres == null)
             {
                 return NotFound();
@@ -64,8 +64,7 @@ namespace WebApplication1.Controllers
             ModelState.Remove("GamesGenres");
             if (ModelState.IsValid)
             {
-                _context.Add(genres);
-                await _context.SaveChangesAsync();
+                await _genresRepository.AddAsync(genres);
                 return RedirectToAction(nameof(Index));
             }
             return View(genres);
@@ -76,12 +75,12 @@ namespace WebApplication1.Controllers
         //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Genres == null)
+            if (id == null || _genresRepository.GetGenres() == null)
             {
                 return NotFound();
             }
 
-            var genres = await _context.Genres.FindAsync(id);
+            var genres = await _genresRepository.GetByIdAsync(id);
             if (genres == null)
             {
                 return NotFound();
@@ -108,8 +107,7 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    _context.Update(genres);
-                    await _context.SaveChangesAsync();
+                    await _genresRepository.UpdateAsync(genres);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -132,13 +130,12 @@ namespace WebApplication1.Controllers
         //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Genres == null)
+            if (id == null || _genresRepository.GetGenres() == null)
             {
                 return NotFound();
             }
 
-            var genres = await _context.Genres
-                .FirstOrDefaultAsync(m => m.IdGenre == id);
+            var genres = await _genresRepository.GetByIdAsync(id);
             if (genres == null)
             {
                 return NotFound();
@@ -156,24 +153,24 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Genres == null)
+            if (_genresRepository.GetGenres() == null)
             {
                 return Problem("Entity set 'WebApplication1Context.Genres'  is null.");
             }
-            var genres = await _context.Genres.FindAsync(id);
+            var genres = await _genresRepository.GetGenres().FindAsync(id);
             if (genres != null)
             {
-                _context.Genres.Remove(genres);
+                _genresRepository.GetGenres().Remove(genres);
             }
 
-            await _context.SaveChangesAsync();
+            await _genresRepository.Async();
             return RedirectToAction(nameof(Index));
         }
 
         //Recibe por parametro id del tipo int.
         private bool GenresExists(int id)
         {
-            return _context.Genres.Any(e => e.IdGenre == id);
+            return _genresRepository.GetGenres().Any(e => e.IdGenre == id);
         }
     }
 }
