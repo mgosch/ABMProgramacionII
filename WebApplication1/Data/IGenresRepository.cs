@@ -11,13 +11,13 @@ namespace WebApplication1.Data
 
         Task AddAsync(Genres genres);
 
-        Task DeleteAsync(Genres genres);
+        void Delete(Genres genres);
 
         Task<Genres> GetByIdAsync(int? id);
 
-        DbSet<Genres> GetGenres();
-
         Task Async();
+
+        bool GenreExist(int id);
 
     }
 }

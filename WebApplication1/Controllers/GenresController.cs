@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
         //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _genresRepository.GetGenres() == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -75,7 +75,7 @@ namespace WebApplication1.Controllers
         //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _genresRepository.GetGenres() == null)
+            if (id == null )
             {
                 return NotFound();
             }
@@ -130,7 +130,7 @@ namespace WebApplication1.Controllers
         //Devuelve genero. Si el genero no existe devuelve mensaje.
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _genresRepository.GetGenres() == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -153,14 +153,10 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_genresRepository.GetGenres() == null)
-            {
-                return Problem("Entity set 'WebApplication1Context.Genres'  is null.");
-            }
-            var genres = await _genresRepository.GetGenres().FindAsync(id);
+            var genres = await _genresRepository.GetByIdAsync(id);
             if (genres != null)
             {
-                _genresRepository.GetGenres().Remove(genres);
+                _genresRepository.Delete(genres);
             }
 
             await _genresRepository.Async();
@@ -170,7 +166,7 @@ namespace WebApplication1.Controllers
         //Recibe por parametro id del tipo int.
         private bool GenresExists(int id)
         {
-            return _genresRepository.GetGenres().Any(e => e.IdGenre == id);
+            return _genresRepository.GenreExist(id);
         }
     }
 }

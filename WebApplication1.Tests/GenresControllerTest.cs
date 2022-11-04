@@ -3,6 +3,8 @@ using WebApplication1.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 using Moq;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Tests
 {
@@ -13,7 +15,6 @@ namespace WebApplication1.Tests
         public async Task IndexReturnsListGenres()
         {
             // Arrange
-            int testSessionId = 1;
             var mockRepo = new Mock<IGenresRepository>();
             mockRepo.Setup(repo => repo.ToListAsync())
                 .ReturnsAsync(GetTestGenres());
@@ -29,6 +30,73 @@ namespace WebApplication1.Tests
             Assert.Equal(2, model.Count());
         }
 
+        [Fact]
+        public async Task DetailsReturnUnicGenre()
+        {
+            // Arrange
+            int testSessionId = 1;
+            var mockRepo = new Mock<IGenresRepository>();
+            mockRepo.Setup(repo => repo.GetByIdAsync(testSessionId))
+                .ReturnsAsync(GetTestGenres().FirstOrDefault(
+                            s => s.IdGenre == testSessionId));
+            var controller = new GenresController(mockRepo.Object);
+
+            // Act
+            var result = await controller.Details(testSessionId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<Genres>(
+                viewResult.ViewData.Model);
+            Assert.Equal("Arcade", model.Description);
+            Assert.Equal(testSessionId, model.IdGenre);
+        }
+
+        [Fact]
+        public async Task DeleteReturnUnicGenre()
+        {
+            // Arrange
+            int testSessionId = 1;
+            var mockRepo = new Mock<IGenresRepository>();
+            mockRepo.Setup(repo => repo.GetByIdAsync(testSessionId))
+                .ReturnsAsync(GetTestGenres().FirstOrDefault(
+                            s => s.IdGenre == testSessionId));
+            var controller = new GenresController(mockRepo.Object);
+
+            // Act
+            var result = await controller.Delete(testSessionId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<Genres>(
+                viewResult.ViewData.Model);
+            Assert.Equal("Arcade", model.Description);
+            Assert.Equal(testSessionId, model.IdGenre);
+        }
+
+
+        [Fact]
+        public async Task EditReturnUnicGenre()
+        {
+            // Arrange
+            int testSessionId = 1;
+            var mockRepo = new Mock<IGenresRepository>();
+            mockRepo.Setup(repo => repo.GetByIdAsync(testSessionId))
+                .ReturnsAsync(GetTestGenres().FirstOrDefault(
+                            s => s.IdGenre == testSessionId));
+            var controller = new GenresController(mockRepo.Object);
+
+            // Act
+            var result = await controller.Edit(testSessionId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<Genres>(
+                viewResult.ViewData.Model);
+            Assert.Equal("Arcade", model.Description);
+            Assert.Equal(testSessionId, model.IdGenre);
+        }
+
         private List<Genres> GetTestGenres()
         {
             var genres = new List<Genres>();
@@ -39,11 +107,10 @@ namespace WebApplication1.Tests
             });
             genres.Add(new Genres()
             {
-                IdGenre = 1,
+                IdGenre = 2,
                 Description = "Acción"
             });
             return genres;
         }
-
     }
 }

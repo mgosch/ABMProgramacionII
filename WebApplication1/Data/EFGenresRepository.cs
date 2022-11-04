@@ -28,27 +28,28 @@ namespace WebApplication1.Data
             return _context.SaveChangesAsync();
         }
 
-
-        public DbSet<Genres> GetGenres()
-        {
-            return _context.Genres;
-        }
-
         public Task<Genres> GetByIdAsync(int? id)
         {
             return _context.Genres
                     .FirstOrDefaultAsync(s => s.IdGenre == id);
         }
 
-        public Task DeleteAsync(Genres genres)
+        public void Delete(Genres genres)
         {
-            _context.Genres.Remove(genres);
-            return _context.SaveChangesAsync();
+            if (genres != null)
+            {
+                _context.Genres.Remove(genres);
+            }
         }
 
         public Task Async()
         {
             return _context.SaveChangesAsync();
+        }
+
+        public bool GenreExist(int id)
+        {
+            return _context.Genres.Any(e => e.IdGenre == id);
         }
     }
 }
