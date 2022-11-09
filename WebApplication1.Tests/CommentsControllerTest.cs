@@ -1,5 +1,6 @@
 ﻿using WebApplication1.Data;
 using WebApplication1.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Tests
 {
