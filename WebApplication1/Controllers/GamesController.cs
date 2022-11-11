@@ -55,6 +55,7 @@ namespace WebApplication1.Controllers
             }
 
             var games = await _context.Games
+                        .Include(i => i.GamesGenres).ThenInclude(i => i.Genres)
                         .Include(i => i.Comments)
                         .AsNoTracking()
                         .FirstOrDefaultAsync(m => m.IdGame == id);
@@ -205,7 +206,9 @@ namespace WebApplication1.Controllers
             }
 
             var games = await _context.Games
-                .FirstOrDefaultAsync(m => m.IdGame == id);
+               .Include(i => i.GamesGenres).ThenInclude(i => i.Genres)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(m => m.IdGame == id);
             if (games == null)
             {
                 return NotFound();

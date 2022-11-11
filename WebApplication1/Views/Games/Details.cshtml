@@ -46,6 +46,15 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Image)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayName("Géneros")
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var genres in Model.GamesGenres)
+            {
+                @genres.Genres.Description <br />
+            }
+        </dd>
     </dl>
 
     @if (Model.Comments != null)
