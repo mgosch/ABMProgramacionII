@@ -79,6 +79,9 @@
                     <td>
                         @item.Comment
                     </td>
+                    <td>
+                        <a asp-action="DeleteComment" asp-route-id="@item.IdComment">Eliminar</a>
+                    </td>
                 </tr>
             }
 

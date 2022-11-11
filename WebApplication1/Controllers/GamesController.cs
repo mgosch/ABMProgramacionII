@@ -276,6 +276,40 @@ namespace WebApplication1.Controllers
             return _context.Games.Any(e => e.IdGame == id);
         }
 
+        // GET: Comments/Delete/5
+        public async Task<IActionResult> DeleteComment(int? id)
+        {
+            if (id == null || _context.Comments == null)
+            {
+                return NotFound();
+            }
+            var comments = await _context.Comments
+                 .FirstOrDefaultAsync(m => m.IdComment == id);
+            if (comments == null)
+            {
+                return NotFound();
+            }
+            return View(comments);
+        }
+
+        // POST: Comments/Delete/5
+        [HttpPost, ActionName("DeleteComment")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCommentConfirmed(int id)
+        {
+            if (_context.Comments == null)
+            {
+                return Problem("Entity set 'WebApplication1Context.Comments'  is null.");
+            }
+            var comments = await _context.Comments.FindAsync(id);
+            if (comments != null)
+            {
+                _context.Comments.Remove(comments);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         //Recibe por parametro un objeto del tipo Game
         //Devuelve asigna un genero o listado de generos al juego.
         private void PopulateAssignedGenresData(Games game)
